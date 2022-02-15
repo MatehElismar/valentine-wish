@@ -265,14 +265,28 @@ const animationTimeline = () => {
       "+=1"
     );
 
+  const restartOnClick = () => {
+    tl.restart();
+  }
+
+  tl.eventCallback("onStart", () => {
+    const body = document.querySelector('body')
+    body.classList.remove("lovely-background")
+    // Restart Animation on click
+    body.removeEventListener("click", restartOnClick);
+  })
+
+  tl.eventCallback("onComplete", () => {
+    const body = document.querySelector('body')
+    body.classList.add("lovely-background")
+    // Restart Animation on click
+    body.addEventListener("click", restartOnClick);
+  })
+
   // tl.seek("currentStep");
   // tl.timeScale(2);
 
-  // Restart Animation on click
-  const replyBtn = document.getElementById("replay");
-  replyBtn.addEventListener("click", () => {
-    tl.restart();
-  });
+  // const replyBtn = document.getElementById("body");
 };
 
 // Import the data to customize and insert them into page
@@ -283,6 +297,7 @@ const fetchData = () => {
       Object.keys(data).map((customData) => {
         if (data[customData] !== "") {
           if (customData === "imagePath") {
+
             document
               .getElementById(customData)
               .setAttribute("src", data[customData]);
